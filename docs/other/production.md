@@ -103,23 +103,9 @@ To re-use the same setup for local development, copy `default.config.yml` to `va
 The only other thing you need to do is copy the inventory file `example.inventory` to `inventory` (so it is located at `prod/inventory`). By default, it reads:
 
     [drupalvm]
-    1.2.3.4 ansible_ssh_user=my_admin_username
+    1.2.3.4
 
 Change the host `1.2.3.4` to either the IP address or the hostname of your DigitalOcean Droplet. Remember that if you would like to use a hostname, you need to make sure the hostname actually resolves to your Droplet's IP address, either in your domain's public DNS configuration, or via your local hosts file.
-
-### Initialize the server with an administrative account
-
-> Note: This guide assumes you have Ansible [installed](http://docs.ansible.com/ansible/intro_installation.html) on your host machine.
-
-The first step in setting up Drupal VM on the cloud server is to initialize the server with an administrative account (which is separate from the `root` user account for better security).
-
-Inside the `examples/prod/bootstrap` folder, copy the `example.vars.yml` file to `vars.yml` and update the variables in that file for your own administrative account (make sure especially to update the `admin_password` value!).
-
-Then, run the following command within Drupal VM's root directory (the folder containing the `Vagrantfile`):
-
-    ansible-playbook -i examples/prod/inventory examples/prod/bootstrap/init.yml -e "ansible_ssh_user=root"
-
-Once the initialization is complete, you can test your new admin login with `ssh my_admin_username@droplet-hostname-or-ip`. You should be logged in via your existing SSH key. Log back out with `exit`.
 
 ### Provision Drupal VM on the Droplet
 
@@ -131,7 +117,7 @@ _Note: If you have installed [Drupal VM as a Composer dependency](../deployment/
 
     DRUPALVM_ENV=prod ansible-playbook -i config/prod/inventory vendor/geerlingguy/drupal-vm/provisioning/playbook.yml -e "config_dir=$(pwd)/config" --become --ask-become-pass
 
-Ansible will prompt you for your admin account's `sudo` password (the same as the password you encrypted and saved as `admin_password`). Enter it and press return.
+Ansible will prompt you for your `sudo` password. Enter it and press return.
 
 After a few minutes, your Drupal-VM-in-the-cloud Droplet should be fully configured to match your local development environment! You can visit your Droplet and access the fresh Drupal site just like you would locally (e.g. `http://example.drupalvm.com/`).
 
